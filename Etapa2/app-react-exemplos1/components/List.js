@@ -1,61 +1,53 @@
-import React, { useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, Image, TextInput, FlatList } from 'react-native';
+import React, { Component } from "react";
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 
-import List from './components/List';
 
-export default function App() {
- 
-  return (
-    <View style={styles.container}>
-      <List />
-    </View>
-  );
+class List extends Component {
+    state = {
+        names: [
+            {id: 0, name: 'Ben'},
+            {id: 1, name: 'Susan'},
+            {id: 2, name: 'Roberth'},
+            {id: 3, name: 'Chrischarles'}
+        ]
+    }
+    alertItemName = (item) => { 
+        alert(item.name);
+    }
+
+    render() {
+        return (
+            <View>
+                <Text style={styles.text}>
+                    Lista de itens "clicáveis"
+                </Text>
+                {
+                    this.state.names.map((item, index) => (
+                        <TouchableOpacity 
+                            key={item.id}
+                            style={styles.container}
+                            onPress={() => this.alertItemName(item)}
+                        >
+                            <Text style={styles.text}>
+                                {item.name}
+                            </Text>
+                        </TouchableOpacity> 
+                    ))
+                }
+            </View>
+        );
+    }
 }
+export default List;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    marginTop: 60,
-  },
-  text: {
-    fontSize: 24,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  list: {
-    marginTop: 20,
-  },
-  item: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 10,
-    padding: 10,
-    backgroundColor: '#f0f0f0',
-    borderRadius: 5,
-  },
-  itemText: {
-    flex: 1,
-    marginRight: 10,
-  },
-  buttons: {
-    flexDirection: 'row',
-  },
-  editInput: {
-    flex: 1,
-    marginRight: 10,
-    borderColor: 'gray',
-    borderWidth: 1,
-    paddingHorizontal: 10,
-  }
+    container: {
+        padding: 10,
+        marginTop: 3,
+        backgroundColor: '#d9f9b1',
+        alignItems: 'center',
+    },
+    text: {
+        color: '#4f603c',
+    }
 });
