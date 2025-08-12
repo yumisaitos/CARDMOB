@@ -1,13 +1,24 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, Button, StyleSheet } from "react-native";
+import { useTheme } from '../contexts/ThemeContext'; // Nova
 
 function HomeScreen() {
-
+    const { theme, toggleTheme } = useTheme();
     return (
-        <View>
-            <text>Home Screen</text>
+        <View style={[styles.container, {backgroundColor: theme.colors.background}]}>
+            <Text style={{ color: theme.colors.text, marginBottom: theme.spacing(1) }}>
+                Home Screen
+            </Text>
+            <Button title="Alternar Tema" color={theme.colors.primary} onPress={toggleTheme}/>
         </View>
     );
 }
-
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+});
