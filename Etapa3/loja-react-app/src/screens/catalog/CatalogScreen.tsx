@@ -9,7 +9,7 @@ const CatalogScreen = ({navigation} : any) => {
 
     const handleBuyPress = (product : any) => {
         // 1 - Adicionar ao carrinho
-        // 2 - Ir para a tela do carrinho
+        // 2 - Ir para a tela do carrinh
         console.log(product);
     };
 

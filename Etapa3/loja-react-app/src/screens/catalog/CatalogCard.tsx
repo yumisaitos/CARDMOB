@@ -14,7 +14,7 @@ const CatalogCard = ({product, onBuyPress}: any) => {
                 <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
                 <View style={styles.buttonsContainer}>
                         <Button 
-                            title="Comprar"
+                            title="Compra"
                             color="#28A745"
                             onPress={onBuyPress}
                         />
