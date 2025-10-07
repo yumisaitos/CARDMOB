@@ -12,6 +12,7 @@ import HomeScreen from "../screens/HomeScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import LoginScreen from "../screens/LoginScreen";
 import CatalogScreen from "../screens/catalog/CatalogScreen";
+import CartScreen from "../screens/cart/CartScreen";
 
 const AppStack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator<TabParamList>();
@@ -21,11 +22,14 @@ function TabNavigator() {
         <Tab.Navigator
             screenOptions={({route, navigation}) => ({
               tabBarIcon: ({ color, focused, size}) => {
-                let iconName: "tags" | undefined;
+                let iconName: "tags" | "shopping-cart" | undefined;
                 if (route.name === "Catalog") {
-                  iconName = focused ? "tags" : "tags";
+                  iconName = "tags";
                 }
-                return <FontAwesome name={iconName} size={size} color={color} />
+                if (route.name === "Cart") {
+                  iconName = "shopping-cart";
+                }
+                return iconName ? <FontAwesome name={iconName} size={size} color={color} /> : null;
               },
               tabBarActiveTintColor: "red",
               tabBarInactiveTintColor: "grey",
@@ -37,6 +41,11 @@ function TabNavigator() {
               component={CatalogScreen}
               options={{title: 'Menu'}}
               />
+            <Tab.Screen
+              name="Cart"
+              component={CartScreen}
+              options={{title: 'Seu Carrinho'}}
+            />
             <Tab.Screen name="Settings" component={HomeScreen} />
             <Tab.Screen name="Register" component={RegisterScreen} />
         </Tab.Navigator>
