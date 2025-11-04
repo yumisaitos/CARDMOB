@@ -22,14 +22,14 @@ function TabNavigator() {
         <Tab.Navigator
             screenOptions={({route, navigation}) => ({
               tabBarIcon: ({ color, focused, size}) => {
-                let iconName: "tags" | "shopping-cart" | undefined;
+                let iconName;
                 if (route.name === "Catalog") {
-                  iconName = "tags";
+                  iconName = focused ? "tags" : "tags";
                 }
                 if (route.name === "Cart") {
-                  iconName = "shopping-cart";
+                  iconName = focused ? "shopping-cart" : "shopping-cart";
                 }
-                return iconName ? <FontAwesome name={iconName} size={size} color={color} /> : null;
+                return <FontAwesome name={iconName} size={size} color={color} />
               },
               tabBarActiveTintColor: "red",
               tabBarInactiveTintColor: "grey",
@@ -47,7 +47,11 @@ function TabNavigator() {
               options={{title: 'Seu Carrinho'}}
             />
             <Tab.Screen name="Settings" component={HomeScreen} />
-            <Tab.Screen name="Register" component={RegisterScreen} />
+            <Tab.Screen
+              name="Register"
+              component={RegisterScreen}
+              options={{title: "Cadastrar", headerShown: true}} // novo
+            />
         </Tab.Navigator>
     );
 }
