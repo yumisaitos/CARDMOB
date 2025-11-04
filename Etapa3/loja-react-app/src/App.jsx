@@ -1,34 +1,30 @@
-import React from 'react'
-import { Routes, Route, NavLink } from 'react-router-dom'
-import Profile from './pages/Profile'
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
+
+import { ThemeProvider } from './src/contexts/ThemeContext'; // NOVA
+// import HomeScreen from './src/screens/HomeScreen';
+import RootNavigator from './src/navigation/RootNavigator';
+import { AuthProvider } from './src/contexts/AuthContext';
+import { ShopProvider } from './src/contexts/ShopContext';
+
 
 export default function App() {
   return (
-    <div>
-      <nav style={styles.nav}>
-        <NavLink to="/" style={styles.link}>Home</NavLink>
-        <NavLink to="/perfil" style={styles.link}>Perfil</NavLink>
-      </nav>
-
-      <Routes>
-        <Route path="/" element={<h2 style={{ textAlign: 'center' }}>Bem-vindo!</h2>} />
-        <Route path="/perfil" element={<Profile />} />
-      </Routes>
-    </div>
-  )
+    <ThemeProvider>
+      <AuthProvider>
+        <ShopProvider>
+          <RootNavigator />
+        </ShopProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  );
 }
 
-const styles = {
-  nav: {
-    display: 'flex',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
     justifyContent: 'center',
-    gap: '20px',
-    padding: '15px',
-    background: '#f3f4f6'
   },
-  link: {
-    textDecoration: 'none',
-    color: '#333',
-    fontWeight: 'bold'
-  }
-}
+});

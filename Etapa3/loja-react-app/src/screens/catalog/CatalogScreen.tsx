@@ -1,43 +1,36 @@
-import React, { useContext } from "react";
-import { View, Text, FlatList, StyleSheet} from 'react-native';
+import React from 'react';
+import { View, Text, FlatList, StyleSheet } from 'react-native';
 
-import CatalogCard from "./CatalogCard";
+import CartItem from '../cart/CartItem';
 
-// Todo: importar o serviço de recuperação do catalog
+import { useShop } from '../../contexts/ShopContext';
 
-const CatalogScreen = ({navigation} : any) => {
+const CartScreen = ({ navigation }: any) => {
+    const { cartItems } = useShop();
 
-    const handleBuyPress = (product : any) => {
-        // 1 - Adicionar ao carrinho
-        // 2 - Ir para a tela do carrinh
-        console.log(product);
-    };
-
-    const renderItem = ({ product }: any) => (
-        <CatalogCard 
-            product={product}
-            onBuyPress={() => handleBuyPress(product)}
-        />
+    const renderItem = ({item} : any) => (
+        <CartItem item={item} />
     );
 
+    const cartTemp = [
+        { 
+            id: 1,
+            quantity: 2,
+            price: 8.5,
+            name: "Brigadeiro promoção especial",
+            image: "http://10.81.205.50:5000/uploads/brigadeiro-matcha-white.png",
+        }
+    ];
+
     return (
-        <View style={styles.container}>
-            <Text>Menu</Text>
+        <View> 
+            <Text>Carrinho de compras</Text>
             <FlatList 
-                data={[]}
+                data={cartItems}
                 renderItem={renderItem}
-                keyExtractor={(item: any) => item.id}
+                keyExtractor={(item: any) => item.id.toString()}
             />
         </View>
     );
 };
-
-export default CatalogScreen;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        padding: 15,
-        backgroundColor: '#F8F8F8',
-    }
-});
+export default CartScreen;
