@@ -6,12 +6,15 @@ type ShopContextType = {
     removeFromCart: (itemId: number) => Promise<void>;
     getTotalPrice: () => number;
     clearCart: () => void;
+    lastOrderInfo: (orderInfo: any) => void;
+    orderInfo: any[]; // Added orderInfo to the context type
 };
 
 export const ShopContext = createContext<ShopContextType>({} as ShopContextType);
 
 export const ShopProvider: React.FC<{ children: React.ReactNode}> = ({ children}) => {
     const [cartItems, setCartItems] = useState<any[]>([]);
+    const [orderInfo, setOrderInfo] = useState<any[]>([]);
 
     const addToCart = async (item: any, quantity: number = 1) => {
         setCartItems(prevItems => {
@@ -33,7 +36,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode}> = ({ children}
         )
     }
 
-    const removeFromCart = (itemId: number) => {
+    const removeFromCart = async (itemId: number) => {
         setCartItems((prevItems) =>  
             prevItems.filter(item => item.id !== itemId)
         );
@@ -49,9 +52,13 @@ export const ShopProvider: React.FC<{ children: React.ReactNode}> = ({ children}
         setCartItems([]);
     }
 
+    const lastOrderInfo = (orderInfo: any) => {
+        setOrderInfo(orderInfo);
+    }
+
     return (
         <ShopContext
-            value={ { cartItems, addToCart, removeFromCart, getTotalPrice, clearCart } }
+            value={ { cartItems, addToCart, removeFromCart, getTotalPrice, clearCart, orderInfo, lastOrderInfo } }
         >
             {children}
         </ShopContext>
