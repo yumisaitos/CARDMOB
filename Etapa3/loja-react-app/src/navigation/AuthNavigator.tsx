@@ -1,54 +1,97 @@
 import React from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { AuthStackParamList, AuthTabParamList } from './types';
 
-// Telas do app - área logada.
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+
+import { RootStackParamList, TabParamList } from './types';
+
+// Telas do app - área não logada.
 import HomeScreen from "../screens/HomeScreen";
 // importar depois que implementar: DetailsScreen, SettingsScreen
-import ProfileScreen from "../screens/auth/ProfileScreen";
+import RegisterScreen from "../screens/RegisterScreen";
+import LoginScreen from "../screens/LoginScreen";
+import CatalogScreen from "../screens/catalog/CatalogScreen";
+import CartScreen from "../screens/cart/CartScreen";
 import CheckoutScreen from "../screens/cart/CheckoutScreen";
+import OrderInfoScreen from "../screens/cart/OrderInfoScreen";
 
-const Stack = createNativeStackNavigator<AuthStackParamList>();
-const Tab = createBottomTabNavigator<AuthTabParamList>();
+const AppStack = createNativeStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<TabParamList>();
 
-function AuthTabNavigator() {
+function TabNavigator() {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator
+            screenOptions={({route, navigation}) => ({
+              tabBarIcon: ({ color, focused, size}) => {
+                let iconName;
+                if (route.name === "Catalog") {
+                  iconName = focused ? "tags" : "tags";
+                }
+                if (route.name === "Cart") {
+                  iconName = focused ? "shopping-cart" : "shopping-cart";
+                }
+                return <FontAwesome name={iconName} size={size} color={color} />
+              },
+              tabBarActiveTintColor: "red",
+              tabBarInactiveTintColor: "grey",
+              headerShown: false,
+            })}
+          >
+            <Tab.Screen 
+              name="Catalog"
+              component={CatalogScreen}
+              options={{title: 'Menu'}}
+              />
             <Tab.Screen
-              name="Home"
-              component={ProfileScreen}
-              options={{ title: 'Área Logada' }}
+              name="Cart"
+              component={CartScreen}
+              options={{title: 'Seu Carrinho', headerShown: true}}
             />
             <Tab.Screen name="Settings" component={HomeScreen} />
+            <Tab.Screen
+              name="Register"
+              component={RegisterScreen}
+              options={{title: "Cadastrar", headerShown: true}} // novo
+            />
         </Tab.Navigator>
     );
 }
 
-function AuthStackNavigator() {
+function StackNavigator() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen
+    <AppStack.Navigator>
+      <AppStack.Screen
         name="Tabs"
-        component={AuthTabNavigator}
+        component={TabNavigator}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
+      <AppStack.Screen
         name="Details"
         component={HomeScreen}
         options={{ title: 'Detalhes' }}
       />
-      <Stack.Screen 
+      <AppStack.Screen 
+        name="Login"
+        component={LoginScreen}
+        options={{ title: "Acessar" }}
+      />
+      <AppStack.Screen 
         name="Checkout"
         component={CheckoutScreen}
-        options={{title: 'Concluir pedido'}}
+        options={{title: "Concluir pedido"}}
       />
-    </Stack.Navigator>
+      <AppStack.Screen 
+        name="OrderInfo"
+        component={OrderInfoScreen}
+        options={{title: "Resumo do pedido"}}
+      />
+    </AppStack.Navigator>
   );
 }
 
-export default function AuthNavigator() {
+export default function AppNavigator() {
   return (
-    <AuthStackNavigator />
+    <StackNavigator />
   );
 };
