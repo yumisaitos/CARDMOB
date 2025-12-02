@@ -9,7 +9,13 @@ import { requestProfileById } from "../../services/profileService"; // novo
 function ProfileScreen({ navigation }: any) {
     const { theme, toggleTheme } = useTheme();
     const { logout, userData } = useAuth();
-    const [user, setUser] = useState({}); // novo
+    interface UserProfile {
+        image: string;
+        name: string;
+        email: string;
+    }
+    
+    const [user, setUser] = useState<UserProfile | null>(null); // novo
 
     // novo
     useEffect(() => {
@@ -27,11 +33,13 @@ function ProfileScreen({ navigation }: any) {
         }
         fetchProfile();
     }, []);
-
-    return (
-        <View style={[styles.container, {backgroundColor: theme.colors.background}]}>
-            <Text style={{ color: theme.colors.text, marginBottom: theme.spacing(1) }}>
-                Profile Screen
+            {user && (
+                <View>
+                    <Image source={{ uri: user.image }} style={styles.image}/>
+                </View>
+            )}
+            <Text style={styles.text}>{user?.name}</Text>
+            <Text style={styles.text}>{user?.email}</Text>
             </Text>
             <View>
                 <Image source={{ uri: user.image }} style={styles.image}/>

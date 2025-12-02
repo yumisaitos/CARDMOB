@@ -1,60 +1,72 @@
-import React, { createContext, useState, useEffect, useContext} from "react";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from "react";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { AuthStackParamList, AuthTabParamList } from './types';
 
-import { getTokenData } from "../services/authService"; // novo.
+// Telas do app - área logada.
+import HomeScreen from "../screens/HomeScreen";
+// importar depois que implementar: DetailsScreen, SettingsScreen
+import ProfileScreen from "../screens/auth/ProfileScreen";
+import CheckoutScreen from "../screens/cart/CheckoutScreen";
+import OrderInfoScreen from "../screens/cart/OrderInfoScreen";
+import ManagerOrdersScreen from "../screens/auth/ManagerOrdersScreen";
+import CatalogScreen from "../screens/catalog/CatalogScreen";
 
-type AuthContextType = {
-    user: { token: string } | null;
-    login: (token: string) => Promise<void>;
-    logout: () => Promise<void>;
-    loading: boolean;
-    getUserDataFromToken: (token: string | null) => Promise<any[]>; // novo
-    userData: Promise<any[]>; // novo
-};
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+const Stack = createNativeStackNavigator<AuthStackParamList>();
+const Tab = createBottomTabNavigator<AuthTabParamList>();
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    // Lógica do context provider.
-    const [user, setUser] = useState<{ token: string } | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [userData, setUserData] = useState<any[]>([]); // novo
-
-    useEffect( () => {
-        const loadUser = async () => {
-            const token = await AsyncStorage.getItem('token');
-            if (token) {
-                setUser({ token });
-            }
-            setLoading(false);
-        };
-        loadUser();
-        getUserDataFromToken(); // novo
-    }, []);
-
-    const login = async (token: string) => {
-        await AsyncStorage.setItem('token', token);
-        setUser({token});
-    }
-
-    const logout = async () => {
-        await AsyncStorage.removeItem('token');
-        setUser(null);
-    }
-
-    // novo callback.
-    const getUserDataFromToken = async () => {
-        const token = await AsyncStorage.getItem('token');
-        const tokenData = getTokenData(token);
-        setUserData(tokenData);
-    }
-
+function AuthTabNavigator() {
     return (
-        <AuthContext 
-            value={{ user, login, logout, loading, userData }}
-        >
-            {children}
-        </AuthContext>
+        <Tab.Navigator>
+            <Tab.Screen
+              name="Catalog"
+              component={CatalogScreen}
+              options={{ title: 'Menu' }}
+            />
+            <Tab.Screen
+              name="Home"
+              component={ProfileScreen}
+              options={{ title: 'Área Logada' }}
+            />
+            <Tab.Screen name="Settings" component={HomeScreen} />
+            <Tab.Screen
+              name="Orders"
+              component={ManagerOrdersScreen}
+              options={{ title: 'Pedidos'}}
+            />
+        </Tab.Navigator>
     );
-};
+}
 
-export const useAuth = () => useContext(AuthContext);
+function AuthStackNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Tabs"
+        component={AuthTabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Details"
+        component={HomeScreen}
+        options={{ title: 'Detalhes' }}
+      />
+      <Stack.Screen 
+        name="Checkout"
+        component={CheckoutScreen}
+        options={{title: 'Concluir pedido'}}
+      />
+      <Stack.Screen 
+        name="OrderInfo"
+        component={OrderInfoScreen}
+        options={{title: 'Resumo do pedido'}}
+      />
+    </Stack.Navigator>
+  );
+}
+
+export default function AuthNavigator() {
+  return (
+    <AuthStackNavigator />
+  );
+};

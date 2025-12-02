@@ -1,7 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { View, Text, Image, StyleSheet, Button } from 'react-native';
 
+import { useShop } from '../../contexts/ShopContext';
+import { useAuth } from '../../contexts/AuthContext';
+
 const CatalogCard = ({product, onBuyPress}: any) => {
+    const { pickImage }= useShop();
+    const { userData } = useAuth();
+
     return (
         <View style={styles.card}>
             <Image  
@@ -14,10 +20,18 @@ const CatalogCard = ({product, onBuyPress}: any) => {
                 <Text style={styles.price}>R$ {product.price.toFixed(2)}</Text>
                 <View style={styles.buttonsContainer}>
                         <Button 
-                            title="Compra"
+                            title="Comprar"
                             color="#28A745"
                             onPress={onBuyPress}
                         />
+                        {userData.is_admin ? (
+                                <Button 
+                                    title="Editar"
+                                    color="#007BFF"
+                                    onPress={() => pickImage()}
+                                />
+                            ) : null
+                        }
                 </View>
             </View>
         </View>
@@ -37,10 +51,32 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 3,
     },
-    image: {},
-    details: {},
-    name: {},
-    description: {},
-    price: {},
-    buttonsContainer: {}
+    image: {
+        width: '100%',
+        height: 200,
+        borderRadius: 8,
+        borderWidth: 2,
+        borderColor: '#ddd',
+    },
+    details: {
+        paddingHorizontal: 10,
+    },
+    name: {
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    description: {
+        fontSize: 14,
+        color: '#555',
+    },
+    price: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#28A745',
+        marginVertical: 10,
+    },
+    buttonsContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    }
 });
